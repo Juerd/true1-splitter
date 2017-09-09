@@ -80,10 +80,15 @@ module powercon_true1_combi() {
 }
 
 module outer() {
-    translate([corner_radius, corner_radius, corner_radius]) {
-		minkowski() {
-			sphere(corner_radius);
-			cube([width - corner_radius*2, length - corner_radius, height - corner_radius*2]);
+	difference() {
+	    translate([corner_radius, 0, corner_radius]) {
+			minkowski() {
+				sphere(corner_radius);
+				cube([width - corner_radius*2, length - corner_radius, height - corner_radius*2]);
+			}
+		}
+	    translate([0, -corner_radius - meh, 0]) {
+			cube([width, corner_radius + meh*2, height]);
 		}
 	}
 }
