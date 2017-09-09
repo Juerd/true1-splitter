@@ -2,6 +2,7 @@ $fn = 80;
 
 meh            =  0.01;
 wall           =  3.35;
+corner_radius  =  3.0;
 diameter       = 28.7;
 radius         = diameter / 2;
 connectordepth = 30;
@@ -79,7 +80,20 @@ module powercon_true1_combi() {
 }
 
 module outer() {
-    cube([width - meh, length - meh, height - meh]);
+	difference() {
+	    translate([corner_radius, 0, corner_radius]) {
+			minkowski() {
+				sphere(corner_radius);
+				cube([width - corner_radius*2, length - corner_radius, height - corner_radius]);
+			}
+		}
+	    translate([0, -corner_radius - meh, 0]) {
+			cube([width, corner_radius + meh*2, height]);
+		}
+	    translate([0, -corner_radius, height - meh]) {
+			cube([width, length + corner_radius, corner_radius + meh*2]);
+		}
+	}
 }
 
 module inner() {
