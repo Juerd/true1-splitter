@@ -49,9 +49,18 @@ module screwholes_through() {
 
 }
 
+module bridgehack(depth) {
+    // The flame retardant ABS doesn't bridge well.
+    // This angled overhang is a workaround; it gets hidden behind the connector.
+    radius = 5.5;
+    translate([-11, 0, 0]) rotate([0, 0, 36]) cylinder(h = depth + meh, r = radius, $fn=5);
+}
+
+
 module powercon_true1_outlet() {
     translate([radius, 0, radius]) rotate([-90, 0, 0]) {
         cylinder(h = connectordepth + meh, r = radius);
+	bridgehack(connectordepth);
     }
 
     xy = (diameter - screwdist_y) / 2;
@@ -61,13 +70,16 @@ module powercon_true1_outlet() {
 
 module powercon_true1_combi() {
     translate([radius, 0, radius]) rotate([-90, 0, 0]) {
-            translate([diameter + shift, 0, 0]) cylinder(h = connectordepth + meh, r = radius);
-
+            x = diameter + shift;
+            translate([x, 0, 0]) {
+                cylinder(h = connectordepth + meh, r = radius);
+                bridgehack(connectordepth);
+            }
             hull() {
-                x = diameter + shift;
                 translate([0, 0, 0]) cylinder(h = conndepth2, r = radius);
                 translate([x, 0, 0]) cylinder(h = conndepth2, r = radius);
             }
+            bridgehack(conndepth2);
     }
 
     x = (2 * diameter + shift - screwdist_x) / 2;
@@ -88,10 +100,13 @@ module inner() {
 
     translate([radius, 0, radius]) rotate([-90, 0, 0]) {
         // cavity for wires
-        translate([0, 0, connectordepth]) hull () {
-            x = outwidth + shift + diameter;
-            translate([0, 0, 0]) cylinder(h = freespace, r = radius);
-            translate([x, 0, 0]) cylinder(h = freespace, r = radius);
+        translate([0, 0, connectordepth]) {
+            hull () {
+                x = outwidth + shift + diameter;
+                translate([0, 0, 0]) cylinder(h = freespace, r = radius);
+                translate([x, 0, 0]) cylinder(h = freespace, r = radius);
+            }
+            bridgehack(freespace);
         }
     }
 }
